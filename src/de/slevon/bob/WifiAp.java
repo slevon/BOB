@@ -98,7 +98,5 @@ public class WifiAp {
 			e.printStackTrace();
 		}
 	}
-        /////////////////////////////////////////
-	
 	
 }
