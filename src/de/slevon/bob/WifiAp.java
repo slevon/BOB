@@ -79,7 +79,6 @@ public class WifiAp {
 		//Post it to the server
 		HttpClient httpC = new DefaultHttpClient();
 		HttpPost httpPost = new HttpPost(url);
-		
 		try {
 			List<NameValuePair> params = new ArrayList<NameValuePair>(1);
 			params.add(new BasicNameValuePair("wifi_ap_state", String.valueOf(isOn)));

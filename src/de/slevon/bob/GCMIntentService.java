@@ -34,6 +34,7 @@ public class GCMIntentService extends IntentService  {
     protected void onHandleIntent(Intent intent) {
         Log.d("Roman", "Receiver onHandleIntend");
         Bundle extras = intent.getExtras();
+        Log.d("Roman", extras.toString());
         GoogleCloudMessaging gcm = GoogleCloudMessaging.getInstance(this);
         // The getMessageType() intent parameter must be the intent you received
         // in your BroadcastReceiver.
@@ -58,7 +59,9 @@ public class GCMIntentService extends IntentService  {
 	            Log.d(TAG, "onHandleIntent Received: " + extras.toString());
             	//Now we check the type of message:
             	String msg = extras.getString("msg");
-
+            	if(msg == null){
+            		msg="";
+            	}
             	if(msg.equals("takePicture")){
 	       		//We start the activtiy that takes the photo
 	       		Intent i = new Intent (this, TakePhotoActivity.class);
@@ -78,7 +81,23 @@ public class GCMIntentService extends IntentService  {
             	}else if( msg.equals("getWifiAp")){
             		//send current value to webserver
             		WifiAp.postWifiApState(getApplicationContext());
-            	}
+	            }else if( msg.equals("sleep")){
+	        		//If the teathering is off, we set the device to sleep for a given number of minutes
+	            	try{
+		            	if(!WifiAp.getWifiApState(getApplicationContext())){
+		            		//We wait one minute before, we 
+		            		String sMinutes = extras.getString("minutes");
+		            		int minutes = 1;
+		            		if(sMinutes != null){
+		            			minutes = Integer.parseInt(sMinutes);
+		            		}
+		            		FlightmodeSwitcher.enableFlightmodeForMinutes(getApplicationContext(), minutes);
+		            	}
+	            	}catch(Exception e){
+	            		//on fallback always disable flightmode
+	            		FlightmodeSwitcher.disableFlightmode(getApplicationContext());
+	            	}
+	        	}
             }else{
             	Log.e("ROMAN","onHandleIntent: Unknown Meassage type");
             }
@@ -90,8 +109,6 @@ public class GCMIntentService extends IntentService  {
     }
 
     // Put the message into a notification and post it.
-    // This is just one simple example of what you might choose to do with
-    // a GCM message.
     private void sendNotification(String msg) {
         mNotificationManager = (NotificationManager)
                 this.getSystemService(Context.NOTIFICATION_SERVICE);

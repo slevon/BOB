@@ -3,22 +3,20 @@ package de.slevon.bob;
 import static de.slevon.bob.CommonUtilities.TAG;
 
 import java.io.IOException;
-import java.util.Calendar;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import android.app.Activity;
-import android.app.AlarmManager;
-import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.TextView;
+import android.widget.ToggleButton;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
@@ -34,7 +32,7 @@ public class MainActivity extends Activity  {
     public static final String PROPERTY_REG_ID = "registration_id";
     public static final String APP_VERSION_TEXT = "app_version";
 
-    String SENDER_ID = "449474277547";
+    //String SENDER_ID = "449474277547"; THIS IS no comm
 
     TextView mDisplay;
     GoogleCloudMessaging gcm;
@@ -67,7 +65,6 @@ public class MainActivity extends Activity  {
             // should never happen
             throw new RuntimeException("Could not get package name: " + e);
         }
-        
         setContentView(R.layout.activity_main);
         
         mDisplay=(TextView) findViewById(R.id.textView2);
@@ -97,13 +94,21 @@ public class MainActivity extends Activity  {
         if (checkPlayServices()) {
             gcm = GoogleCloudMessaging.getInstance(this);
             regid = getRegistrationId(context);
-
+           
+            //Toast.makeText(getApplicationContext(), regid, Toast.LENGTH_LONG).show();
             if (regid.isEmpty()) {
                 registerInBackground();
             }
         } else {
             Log.i(TAG, "No valid Google Play Services APK found.");
         }
+        
+        //////////////////////////////
+        //ININT flightmode button
+        /////////////////////////////
+        ToggleButton tb =(ToggleButton)findViewById(R.id.flightModeButton);
+        tb.setChecked(FlightmodeSwitcher.isFlightmodeOn(getApplicationContext()));
+        
    
     }      
  
@@ -114,6 +119,7 @@ public class MainActivity extends Activity  {
             Log.i(TAG, "Registration not found.");
             return "";
         }
+        Log.i(TAG, "Registration:"+registrationId);
         // Check if app was updated; if so, it must clear the registration ID
         // since the existing regID is not guaranteed to work with the new
         // app version.
@@ -134,6 +140,7 @@ public class MainActivity extends Activity  {
         editor.putString(PROPERTY_REG_ID, regId);
         editor.putInt(APP_VERSION_TEXT, CommonUtilities.APPVERSION);
         editor.commit();
+        
     }
     
     private SharedPreferences getGCMPreferences(Context context) {
@@ -153,7 +160,7 @@ public class MainActivity extends Activity  {
                     if (gcm == null) {
                         gcm = GoogleCloudMessaging.getInstance(context);
                     }
-                    regid = gcm.register(SENDER_ID);
+                    regid = gcm.register(CommonUtilities.SENDER_ID);
                     msg = "Device registered, registration ID=" + regid;
 
                     // You should send the registration ID to your server over HTTP,
@@ -215,6 +222,18 @@ public class MainActivity extends Activity  {
             return false;
         }
         return true;
+    }
+    
+    public void toggleFlightmode(View v){
+    	ToggleButton tb = (ToggleButton)v;
+    	
+    	if(tb.isChecked()){
+    		//FlightmodeSwitcher.enableFlightmode(getApplicationContext());
+    		FlightmodeSwitcher.enableFlightmodeForMinutes(getApplicationContext(), 1);
+    	}else{
+    		FlightmodeSwitcher.disableFlightmode(getApplicationContext());
+    	}
+    	
     }
  
 }

@@ -34,10 +34,11 @@ public class GCMBroadcastReceiver extends WakefulBroadcastReceiver {
 
 		AlarmManager alarm = (AlarmManager)context.getApplicationContext().getSystemService(Context.ALARM_SERVICE);
 		// Start every 30 seconds
-		alarm.setRepeating(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(), 60*60*1000, pintent); 
+		alarm.setRepeating(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(), 60*60*1000, pintent);
 		//End start on regluar bases
 		//And log at the time of the boot:
 		BatteryState.logCurrentState(context.getApplicationContext());
+		
         
     }
 }

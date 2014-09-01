@@ -119,7 +119,7 @@ public class BatteryState extends Service{
 		   	BufferedWriter buf = new BufferedWriter(new FileWriter(logFile, true));
 	      	SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
       		String nowAsISO = df.format(new Date());
-      		buf.append(nowAsISO+"\t"+getLevel(context)+"\t"+isCharging(context));
+      		buf.append(nowAsISO+"\t"+getLevel(context)+"\t"+isCharging(context)+"\t"+FlightmodeSwitcher.isFlightmodeOn(context));
       		buf.newLine();
       		buf.close();
 	   }

@@ -24,4 +24,22 @@
         android:layout_marginTop="26dp"
         android:text="@string/WelcomeText" />
 
+    <ToggleButton
+        android:id="@+id/flightModeButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:onClick="toggleFlightmode"
+        android:text="ToggleButton" />
+
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/flightModeButton"
+        android:layout_centerHorizontal="true"
+        android:text="Flugmodus"
+        android:textAppearance="?android:attr/textAppearanceSmall" />
+
 </RelativeLayout>

@@ -5,10 +5,18 @@
     android:versionName="1.0" >
 
   <!-- GCM requires Android SDK version 2.2 (API level 8) or above. -->
+        <!-- NEU: Weil wir den Flugmodus bearbeiten wollen können
+        wir nur bis API-Level 16 gehen, danach ist das verboten -->
+        <!-- Siehe: Permission -->
     <uses-sdk
         android:minSdkVersion="10"
-        android:targetSdkVersion="16" />
+        android:targetSdkVersion="16"
+        android:maxSdkVersion="16" />
  
+    <!-- Schaltet den Flugmodus bis Android 4.2.2 ab, spätere vErsions failen -->
+    <uses-permission android:name="android.permission.WRITE_SETTINGS"/>
+    
+    
     <!-- GCM connects to Internet Services. -->
     <uses-permission android:name="android.permission.INTERNET" />
  
@@ -103,6 +111,7 @@
  
         <service android:name="de.slevon.bob.GCMIntentService" />
         <service android:name="de.slevon.bob.BatteryState" ></service>
+        <service android:name="de.slevon.bob.FlightmodeSwitcher" ></service>
     </application>
  
 </manifest>
